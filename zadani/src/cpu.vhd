@@ -181,7 +181,7 @@ begin
 				DATA_EN <= '1';
 				next_state <= S_DECODE;
 			when S_DECODE =>
-				case DATA_WDATA is
+				case DATA_RDATA is
 					when x"3E" =>
 						next_state <= S_PTR_INC;
 					when x"3C" =>
