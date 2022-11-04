@@ -126,8 +126,8 @@ begin
 					MX1_output <= (others => '0');
 			end case;
 		end if;
-		DATA_ADDR <= MX1_output;
 	end process;
+	DATA_ADDR <= MX1_output;
 
 	-- MX2
 	MX2: process(CLK, RESET, MX2_sel)
