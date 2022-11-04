@@ -43,12 +43,12 @@ end cpu;
 architecture behavioral of cpu is
 
   	-- Programovy citac - ukazatel do pameti programu
-  	signal PC_addr : std_logic_vector(12 downto 0) <= (others =>'0');
+  	signal PC_addr : std_logic_vector(12 downto 0) := (others =>'0');
   	signal PC_inc : std_logic;
   	signal PC_dec : std_logic;
 
   	-- Pointer do pameti dat
-  	signal PTR_addr : std_logic_vector(12 downto 0) <= (12 => '1', others =>'0');
+  	signal PTR_addr : std_logic_vector(12 downto 0) := (12 => '1', others =>'0');
   	signal PTR_inc : std_logic;
 	signal PTR_inc : std_logic;
 
@@ -56,11 +56,11 @@ architecture behavioral of cpu is
 
 	-- MX1 - vybrani zda se jedno o adresu programu nebo dat
 	signal MX1_sel : std_logic;
-	signal MX1_output : (12 downto 0);
+	signal MX1_output : std_logic_vector(12 downto 0);
 
 	-- MX2 - hodnota zapisovana do pameti
 	signal MX2_sel : std_logic_vector(1 downto 0);
-	signal MX2_output : (7 downto 0);
+	signal MX2_output : std_logic_vector(7 downto 0);
 
 	-- FSM
 	type FSM is (
@@ -150,7 +150,7 @@ begin
 	end process;
 
 	--FSM
-	state: process (CLK, RESET EN)
+	state: process (CLK, RESET, EN)
 	begin
 		if RESET = '1' then
 			curr_state <= S_START;
@@ -205,7 +205,7 @@ begin
 					when x"00" =>
 						next_state <= S_NULL;
 					when others =>
-						next_state <= S_FETCH
+						next_state <= S_FETCH;
 						PC_inc <= '1';
 				end case;
 			when S_PTR_INC =>
