@@ -83,7 +83,7 @@ async def test_login(dut, uid=''):
     with open(file_name,'rt') as f:
         prog = f.read()
     assert len(prog), "File login.b doesn't contain any program"
-    instcnt, mem, lcd = await run_program(dut, prog, timeout_ns = 100_000)
+    instcnt, mem, lcd = await run_program(dut, prog, timeout_ns = 250_000)
     assert lcd.lower() == uid, "Invalid output"
 
 

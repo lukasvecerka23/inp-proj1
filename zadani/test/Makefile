@@ -23,6 +23,12 @@ VHDL_SRC=../src/cpu.vhd
 
 VHDL_SYNTH_SRC=$(WORK_DIR)/cpu_synth.vhd
 
+ifeq ($(OS),Windows_NT)
+PYTHONHOME=$(shell python -c "import sys; print(sys.prefix)")
+else
+LIBPYTHON_LOC=$(shell cocotb-config --libpython)
+endif 
+
 all:	ghdl
 
 clean:

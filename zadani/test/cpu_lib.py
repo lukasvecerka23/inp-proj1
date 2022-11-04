@@ -26,7 +26,40 @@ RAM_OFS = 4096
 
 LCD_WAIT_TIME = 500
 KB_WAIT_TIME = 500
+CLK_PERIOD = 10
 
+def RisingEdgeCondition(dut, signal, value, timeout=None):
+    clk = dut.clk
+    defined = False
+    clk_edge = 0
+
+    async def fg():
+        nonlocal defined, clk_edge
+
+        while True:
+            await RisingEdge(clk)
+            clk_edge += 1
+
+            if timeout and clk_edge >= timeout:
+                return None
+
+            if (not defined):
+               if (not signal.value.binstr in ['0','1']): 
+                    continue
+               defined = True
+
+            if signal.value == value:
+                break
+
+
+        return clk_edge
+
+        
+    return fg
+
+#---------------------------------------------------
+# LCD emulator
+#---------------------------------------------------
 async def cpu_lcd(dut, lcd: Optional[list] = None):
     clk = dut.clk
     we = dut.out_we
@@ -38,23 +71,27 @@ async def cpu_lcd(dut, lcd: Optional[list] = None):
     if lcd is not None: 
       lcd.clear()
 
-    try:
-        while True:
-          await RisingEdge(clk)
-          if we.value == 0: continue
-    
-          val = chr(int(data.value))
-          if lcd is not None:          
-            lcd.append(val)
-            loggerlcd.debug(f'Characters written to LCD: {repr("".join(lcd))}')
+    cond = RisingEdgeCondition(dut, we, 1)
 
-          busy.value = 1
-          await Timer(LCD_WAIT_TIME, units='ns')
-          await RisingEdge(clk)
-          busy.value = 0   
-    except Exception as e:
-        logger.error(f'LCD module failed with exception {e}')
+    while True:
+        try:
+            await cond()
+        
+            val = chr(int(data.value))
+            if lcd is not None:          
+                lcd.append(val)
+                loggerlcd.debug(f'Characters written to LCD: {repr("".join(lcd))}')
 
+            busy.value = 1
+            await Timer(LCD_WAIT_TIME, units='ns')
+            await RisingEdge(clk)
+            busy.value = 0   
+        except Exception as e:
+            logger.warning(f'[LCD module] clock ignored due to the exception {e}')
+
+#---------------------------------------------------
+# KB emulator
+#---------------------------------------------------
 async def cpu_kb(dut, kbqueue : Queue):
     clk = dut.clk
     req = dut.in_req
@@ -64,28 +101,32 @@ async def cpu_kb(dut, kbqueue : Queue):
     data.value = 0
     vld.value = 0
 
-    try:
-        while True:
-          await RisingEdge(clk)
-          if req.value!=1: continue
-    
-          logger.debug('Waiting for a key stroke')
+    cond = RisingEdgeCondition(dut, req, 1)
 
-          ch = await kbqueue.get()
+    while True:
+        try:
+            await cond()
+        
+            logger.debug('Waiting for a key stroke')
 
-          data.value = ord(ch)
-          vld.value = 1
+            ch = await kbqueue.get()
 
-          while req.value==1:
-            await RisingEdge(clk)
+            data.value = ord(ch)
+            vld.value = 1
 
-          vld.value = 0
+            while req.value==1:
+                await RisingEdge(clk)
 
-          await Timer(KB_WAIT_TIME, units='ns')
+            vld.value = 0
 
-    except Exception as e:
-        logger.error(f'KB module failed with exception {e}')
+            await Timer(KB_WAIT_TIME, units='ns')
 
+        except Exception as e:
+            logger.warning(f'[KB module] clock ignored due to the exception {e}')
+
+#---------------------------------------------------
+# RAM emulator
+#---------------------------------------------------
 async def cpu_ram(dut, mem : list):
     clk = dut.clk
     rdwr = dut.data_rdwr
@@ -93,6 +134,8 @@ async def cpu_ram(dut, mem : list):
     addr = dut.data_addr
     wdata = dut.data_wdata #cpu output
     rdata = dut.data_rdata #cpu input
+    cpu_en = dut.en
+    cpu_reset = dut.reset
     
     rdata.value = 0
 
@@ -103,42 +146,49 @@ async def cpu_ram(dut, mem : list):
     while mem[proglen] > 0: 
         proglen += 1
 
-    try:
-        lastma, lastmaw, lastwd = None, None, None
-        while True:
-            await RisingEdge(clk)
+    lastma, lastmaw, lastwd = None, None, None
 
-            if en.value == 0:
-                continue
+    cond = c1 = RisingEdgeCondition(dut, en, 1)
+    c2 = RisingEdgeCondition(dut, en, 1, 5)
+
+    while True:
+        try:
+            if await cond() is None:
+                loggerd.info(f'result: {hashlib.md5(repr(mem).encode("ascii")).hexdigest()}')
+                logger.debug(f'Reached end of program')
+                break
 
             rw, ma = rdwr.value, int(addr.value)
 
             if rw == 0:
                 #cteni
                 if lastma != ma:
-                  rdata.value = mem[ma]
-                  logger.debug(f'Readed value {rdata.value} from address {ma}')
-                  lastma = ma
+                    rdata.value = mem[ma]
+                    logger.debug(f'Readed value {rdata.value} from address {ma}')
+                    lastma = ma
 
-                  if ma == proglen:
-                    logger.debug(f'Reached end of program')
-                    await Timer(500, units='ns')
-                    loggerd.info(f'result: {hashlib.md5(repr(mem).encode("ascii")).hexdigest()}')
-                    return (proglen, mem)
+                    if (ma >= 0) and (ma < RAM_OFS):
+                        if (ma >= proglen): # and (cpu_en.value == 1) and (cpu_reset.value == 0):
+                            if cond == c1:
+                                cond = c2
+                                logger.debug(f'Readed last instruction')
+                        else:
+                            cond = c1
 
             else:
                 wd = int(wdata.value)
                 if (lastmaw != ma) or (lastwd != wd):
-                  mem[ma] = wd
-                  lastwd = wd
-                  lastmaw = ma
-                  if lastma == lastmaw: lastma = None
-                  logger.debug(f'Write value {wd} to address {ma}')
+                    mem[ma] = wd
+                    lastwd = wd
+                    lastmaw = ma
+                    if lastma == lastmaw: lastma = None
+                    logger.debug(f'Write value {wd} to address {ma}')
 
-    except Exception as e:
-        logger.error(f'RAM module failed with exception {e}')
-        return (proglen, mem)
+        except Exception as e:
+            logger.warning(f'[RAM module] clock ignored due to the exception {e}')
 
+    return (proglen, mem)
+    
 async def cpu_dut_init(dut):
     dut.clk.value=0
     dut.en.value=0
@@ -148,9 +198,10 @@ async def cpu_dut_init(dut):
     dut.in_vld.value=0
     dut.out_busy.value=0
     
-    clk_100mhz = Clock(dut.clk, 10, units='ns')
+    clk_100mhz = Clock(dut.clk, CLK_PERIOD, units='ns')
     clk_gen = cocotb.start_soon(clk_100mhz.start())
 
+    await Timer(1, units='ns')
     return clk_gen
 
 async def run_program(dut, prog : str, timeout_ns : int = 1000, kb_data : Optional[str] = None, mem_data : Optional[str] = None):
@@ -174,7 +225,7 @@ async def run_program(dut, prog : str, timeout_ns : int = 1000, kb_data : Option
     kbinst = cocotb.start_soon(cpu_kb(dut, kbqueue))
 
     dut.reset.value=1
-    await Timer(50, units='ns')
+    await Timer(5*CLK_PERIOD, units='ns')
     dut.reset.value = 0
 
     logger.debug('reset done')
