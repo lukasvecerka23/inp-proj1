@@ -50,7 +50,7 @@ architecture behavioral of cpu is
   	-- Pointer do pameti dat
   	signal PTR_addr : std_logic_vector(12 downto 0) := (12 => '1', others =>'0');
   	signal PTR_inc : std_logic;
-	signal PTR_inc : std_logic;
+	signal PTR_dec : std_logic;
 
   	-- Citac pro zacatek/konec while cyklu
 
@@ -104,9 +104,9 @@ begin
 			PTR_addr <= (others => '0');
 		elsif (CLK'event) and (CLK='1') then
 			if (PTR_inc = '1') then
-				PTR_addr <= x"1000" + ((PTR_addr + 1) mod x"1000");
+				PTR_addr <= PTR_addr + 1;
 			elsif (PTR_dec = '1') then
-				PTR_addr <= x"1000" + ((PTR_addr - 1) mod x"1000");
+				PTR_addr <= PTR_addr - 1;
 			end if;
 		end if;
 	end process;
@@ -161,7 +161,7 @@ begin
 		end if;
     end process;
 
-	next_state: process(state)
+	next_state: process(curr_state)
 	begin
 		PC_inc <= '0';
 		PC_dec <= '0';
