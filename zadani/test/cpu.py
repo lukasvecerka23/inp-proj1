@@ -109,12 +109,19 @@ async def test_printf(dut):
 
     # Priklad testu, ktery provede pozadovany program:
     # Program ocekava vstup z klavesnice, v testu je stisknuta klavesa odpovidajici hodnote 123
-    # prog = ',#load value and print#[>>+>+<<<-]>>>[<<<+>>>-]<<+>[<->[>++++++++++<[->-[>+>>]>[+[-<+>]>+>>]<<<<<]>[-]++++++++[<++++++>-]>[<<+>>-]>[<<+>>-]<<]>]<[->>++++++++[<++++++>-]]<[.[-]<]<'
-    prog = ',.'
+    prog = ',#load value and print#[>>+>+<<<-]>>>[<<<+>>>-]<<+>[<->[>++++++++++<[->-[>+>>]>[+[-<+>]>+>>]<<<<<]>[-]++++++++[<++++++>-]>[<<+>>-]>[<<+>>-]<<]>]<[->>++++++++[<++++++>-]]<[.[-]<]<'
+    # prog = ',.'
     enableDebug(lcd=True)
     instcnt, mem, lcd = await run_program(dut, prog, kb_data=chr(123), timeout_ns=1_000_000)
     assert lcd == '123', "Invalid output"
 
+
+@tb_test()
+async def test_readwrite(dut):
+    prog = ',.'
+    enableDebug(lcd=True)
+    instcnt, mem, lcd = await run_program(dut, prog, kb_data='a', timeout_ns=1_000_000)
+    assert lcd == 'a', "Invalid output"
 
 if __name__ == "__main__":
     # call the main function
