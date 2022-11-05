@@ -226,8 +226,12 @@ begin
 				next_state <= S_DECODE;
 			when S_DECODE =>
 				case instruction is
-					when i_ptr_inc => next_state <= S_PTR_INC;
-					when i_ptr_dec => next_state <= S_PTR_DEC;
+					when i_ptr_inc =>
+					 	PC_inc <= '1';
+					 	next_state <= S_PTR_INC;
+					when i_ptr_dec =>
+						PC_inc <= '1';
+						next_state <= S_PTR_DEC;
 					when i_val_inc =>
 						MX1_sel <= '1';
 						next_state <= S_VAL_INC;
@@ -245,13 +249,11 @@ begin
 				end case;
 			-- Pointer increment
 			when S_PTR_INC =>
-				DATA_EN <= '1';
 				PTR_inc <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
 			-- Pointer decrement
 			when S_PTR_DEC =>
-				DATA_EN <= '1';
 				PTR_dec <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
