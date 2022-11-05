@@ -315,7 +315,7 @@ begin
 
 			when S_READ2 =>
 				if IN_VLD /= '1' then
-					next_state <= S_READ2;
+					next_state <= S_READ1;
 				else
 					PC_inc <= '1';
 					next_state <= S_FETCH;
