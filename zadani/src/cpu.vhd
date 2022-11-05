@@ -317,6 +317,8 @@ begin
 				if IN_VLD /= '1' then
 					next_state <= S_READ1;
 				else
+					DATA_EN <= '1';
+					DATA_RDWR <= '1';
 					PC_inc <= '1';
 					next_state <= S_FETCH;
 				end if;
