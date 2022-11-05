@@ -208,7 +208,7 @@ begin
 		end if;
     end process;
 
-	next_state_logic: process(curr_state, instruction, IN_VLD, OUT_BUSY)
+	next_state_logic: process(curr_state, instruction, IN_VLD)
 	begin
 		PC_inc <= '0';
 		PC_dec <= '0';
@@ -246,8 +246,8 @@ begin
 					when i_do_while_start => next_state <= S_DO_WHILE_START;
 					when i_do_while_end => next_state <= S_DO_WHILE_END;
 					when i_write =>
-						--MX1_sel <= '1';
-						next_state <= S_WRITE2;
+						MX1_sel <= '1';
+						next_state <= S_WRITE1;
 					when i_read => next_state <= S_READ1;
 					when i_null => next_state <= S_NULL;
 					when others => next_state <= S_UNDEFINED;
@@ -290,24 +290,22 @@ begin
 				DATA_RDWR <= '1';
 				next_state <= S_FETCH;
 
-			--when S_WRITE1 =>
-			--	DATA_EN <= '1';
-			--	next_state <= S_WRITE2;
+			when S_WRITE1 =>
+				DATA_EN <= '1';
+				next_state <= S_WRITE2;
 
 			when S_WRITE2 =>
-				DATA_EN <= '1';
-				--if (OUT_BUSY = '0') then
-					
-				--end if;
+				MX1_sel <= '1';
+				if (OUT_BUSY = '0') then
+					PC_inc <= '1';
+				end if;
 				next_state <= S_WRITE3;
 
 			when S_WRITE3 =>
-				-- DATA_EN <= '1';
 				if (OUT_BUSY = '1') then
 					next_state <= S_WRITE2;
 				else
 					OUT_WE <= '1';
-					PC_inc <= '1';
 					next_state <= S_FETCH;
 				end if;
 
@@ -316,8 +314,8 @@ begin
 				next_state <= S_READ2;
 
 			when S_READ2 =>
-				if IN_VLD = '0' then
-					next_state <= S_READ1;
+				if IN_VLD /= '1' then
+					next_state <= S_READ2;
 				else
 					PC_inc <= '1';
 					next_state <= S_FETCH;
