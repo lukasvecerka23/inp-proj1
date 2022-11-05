@@ -98,7 +98,8 @@ architecture behavioral of cpu is
 		S_WRITE1,
 		S_WRITE2,
 		S_WRITE3,
-		S_READ,
+		S_READ1,
+		S_READ2,
 		S_NULL,
 		S_UNDEFINED
 	);
