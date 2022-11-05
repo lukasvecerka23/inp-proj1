@@ -5,14 +5,7 @@
  > +++++           pricist 5 k bunce cislo 3
  <<< -             vratit se a dekrementovat hodnotu bunky cislo 0
 )@
->--.         tisk znaku "x"
->----.       tisk znaku "l"
-+++.         tisk znaku "o"
---------.    tisk znaku "g"
-++.          tisk znaku "i"
-+++++.       tisk znaku "n"
->--.         tisk znaku "0"
-.            tisk znaku "0"
+++++++++++[>++++++++++++>++++++++++>+++++<<<-]>.--.>+.--.++.<----.>>+.---.
 
 
 Tento kod lze tak jak jej vidite tj vcetne komentaru odsmimulovat 
