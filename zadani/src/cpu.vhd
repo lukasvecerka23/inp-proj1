@@ -221,7 +221,7 @@ begin
 
 			
 			when S_VAL_INC =>
-				DATA_RDWRD <= '0';
+				DATA_RDWR <= '0';
 				DATA_EN <= '1';
 				MX1_sel <= '1';
 				next_state <= S_VAL_INC2;
