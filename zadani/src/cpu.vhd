@@ -149,9 +149,8 @@ begin
 					MX1_output <= (others => '0');
 			end case;
 		end if;
-		DATA_ADDR <= MX1_output;
 	end process;
-	
+	DATA_ADDR <= MX1_output;
 
 	-- MX2
 	MX2: process(CLK, RESET, MX2_sel)
@@ -170,9 +169,9 @@ begin
 					MX2_output <= (others => '0'); 
 			end case;
 		end if;
-		OUT_DATA <= DATA_RDATA;
-		DATA_WDATA <= MX2_OUTPUT;
 	end process;
+	OUT_DATA <= DATA_RDATA;
+	DATA_WDATA <= MX2_OUTPUT;
 	
 
 
@@ -291,6 +290,7 @@ begin
 
 			when S_WRITE1 =>
 				DATA_EN <= '1';
+				MX1_sel <= '1';
 				next_state <= S_WRITE2;
 
 			when S_WRITE2 =>
