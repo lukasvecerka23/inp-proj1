@@ -243,10 +243,12 @@ begin
 					when i_while_end => next_state <= S_WHILE_END;
 					when i_do_while_start => next_state <= S_DO_WHILE_START;
 					when i_do_while_end => next_state <= S_DO_WHILE_END;
-					when i_write => next_state <= S_WRITE1;
-					when i_read =>
+					when i_write =>
 						DATA_EN <= '1';
 						MX1_sel <= '1';
+						next_state <= S_WRITE1;
+					when i_read =>
+						
 						next_state <= S_READ;
 					when i_null => next_state <= S_NULL;
 					when others => next_state <= S_UNDEFINED;
