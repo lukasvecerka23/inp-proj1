@@ -367,6 +367,7 @@ begin
 					PAR_count <= '1';
 					PC_dec <= '1';
 					next_state <= S_WHILE_END_3;
+				end if;
 
 			when S_WHILE_END_3 =>
 				if (PAR_cnt /= x"00") then
@@ -381,6 +382,7 @@ begin
 					PAR_inc <= '1';
 				elsif (DATA_RDATA = X"5B") then
 					PAR_dec <= '1';
+				end if;
 				next_state <= S_WHILE_END_5;
 			
 			when S_WHILE_END_5 =>
@@ -388,6 +390,7 @@ begin
 					PC_inc <= '1';
 				else
 					PC_dec <= '1';
+				end if;
 				next_state <= S_WHILE_END_3;
  
 			when others =>
