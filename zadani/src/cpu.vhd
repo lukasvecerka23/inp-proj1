@@ -159,7 +159,7 @@ DATA_ADDR <= MX1_output;
 mx2: process (MX2_sel)
 begin
 	if RESET = '1' then
-		MX2_outpu <= (others=>'0');
+		MX2_output <= (others=>'0');
 	else
 		case MX2_sel is
 				when "00" =>
