@@ -148,8 +148,9 @@ begin
 					MX1_output <= (others => '0');
 			end case;
 		end if;
+		DATA_ADDR <= MX1_output;
 	end process;
-	DATA_ADDR <= MX1_output;
+	
 
 	-- MX2
 	MX2: process(CLK, RESET, MX2_sel)
@@ -168,8 +169,9 @@ begin
 					MX2_output <= (others => '0'); 
 			end case;
 		end if;
+		DATA_WDATA <= MX2_OUTPUT;
 	end process;
-	DATA_WDATA <= MX2_OUTPUT;
+	
 
 
 	-- Instrukcni dekoder
@@ -243,13 +245,13 @@ begin
 				end case;
 			-- Pointer increment
 			when S_PTR_INC =>
-				MX1_sel <= '0';
+				DATA_EN <= '1';
 				PTR_inc <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
 			-- Pointer decrement
 			when S_PTR_DEC =>
-				MX1_sel <= '0';
+				DATA_EN <= '1';
 				PTR_dec <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
