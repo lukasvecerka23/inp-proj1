@@ -227,12 +227,8 @@ begin
 					when i_ptr_dec =>
 						PC_inc <= '1';
 						next_state <= S_PTR_DEC;
-					when i_val_inc =>
-						
-						next_state <= S_VAL_INC;
-					when i_val_dec =>
-						
-						next_state <= S_VAL_DEC;
+					when i_val_inc => next_state <= S_VAL_INC;
+					when i_val_dec => next_state <= S_VAL_DEC;
 					when i_while_start => next_state <= S_WHILE_START;
 					when i_while_end => next_state <= S_WHILE_END;
 					when i_do_while_start => next_state <= S_DO_WHILE_START;
@@ -267,19 +263,17 @@ begin
 				MX1_sel <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
+				
 			-- Value decrement
 			when S_VAL_DEC =>
-				MX1_sel <= '1';
 				DATA_EN <= '1';
+				MX1_sel <= '1';
 				next_state <= S_VAL_DEC2;
 			when S_VAL_DEC2 =>
-				MX2_sel <= "10";
-				MX1_sel <= '1';
-				
-				next_state <= S_VAL_DEC3;
-			when S_VAL_DEC3 =>
 				DATA_EN <= '1';
 				DATA_RDWR <= '1';
+				MX2_sel <= "10";
+				MX1_sel <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
 
