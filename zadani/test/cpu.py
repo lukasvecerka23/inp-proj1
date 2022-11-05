@@ -81,6 +81,17 @@ async def test_do_loop(dut):
     instcnt, mem, lcd = await run_program(dut, '(-)', mem_data='\3', timeout_ns=LCD_WAIT_TIME*10)
     assert mem[RAM_OFS] == 0
 
+@tb_test()
+async def test_test1(dut):
+    """Simple do-while loop test"""
+    instcnt, mem, lcd = await run_program(dut, '(+>)', mem_data='\3', timeout_ns=LCD_WAIT_TIME*10)
+    assert mem[RAM_OFS] == 0
+
+@tb_test()
+async def test_test2(dut):
+    """Simple do-while loop test"""
+    instcnt, mem, lcd = await run_program(dut, '(++>+<)', mem_data='\3', timeout_ns=LCD_WAIT_TIME*10)
+    assert mem[RAM_OFS] == 0
 
 @tb_test()
 async def test_login(dut, uid=''):
