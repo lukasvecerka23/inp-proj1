@@ -134,7 +134,7 @@ begin
 	end process;
 
 	-- MX1
-	MX1: process (CLK, RESET, MX1_sel)
+	MX1: process (CLK, RESET, MX1_sel, PC_addr, PTR_addr)
 	begin
 		if RESET = '1' then
 			MX1_output <= (others => '0');
@@ -241,15 +241,17 @@ begin
 					when i_null => next_state <= S_NULL;
 					when others => next_state <= S_UNDEFINED;
 				end case;
+			-- Pointer increment
 			when S_PTR_INC =>
 				PTR_inc <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
+			-- Pointer decrement
 			when S_PTR_DEC =>
 				PTR_dec <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
-			
+			-- Value increment
 			when S_VAL_INC =>
 				DATA_EN <= '1';
 				next_state <= S_VAL_INC2;
@@ -262,7 +264,7 @@ begin
 				DATA_EN <= '1';
 				DATA_RDWR <= '1';
 				next_state <= S_FETCH;
-
+			-- Value decrement
 			when S_VAL_DEC =>
 				DATA_EN <= '1';
 				next_state <= S_VAL_DEC2;
