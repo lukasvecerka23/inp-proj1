@@ -70,6 +70,8 @@ architecture behavioral of cpu is
 		S_PTR_INC,
 		S_PTR_DEC,
 		S_VAL_INC,
+		S_VAL_INC2,
+		S_VAL_INC3,
 		S_VAL_DEC,
 		S_WHILE_START,
 		S_WHILE_END,
@@ -209,15 +211,27 @@ begin
 						PC_inc <= '1';
 				end case;
 			when S_PTR_INC =>
-				MX1_sel <= '1';
 				PTR_inc <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
 			when S_PTR_DEC =>
-				MX1_sel <= '1';
 				PTR_dec <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
+			when S_VAL_INC =>
+				DATA_EN <= '1';
+				next_state <= S_VAL_INC2;
+			when S_VAL_INC2 =>
+				MX1_sel <= '1';
+				MX2_sel <= "01";
+				next_state <= S_VAL_INC3;
+			when S_VAL_INC3 =>
+				DATA_EN <= '1';
+				MX1_sel <= '1';
+				DATA_RDWR <= '1';
+				PC_inc <= '1';
+				next_state <= S_FETCH;
+
 			when others =>
 				next_state <= S_FETCH;
 				PC_inc <= '1';
