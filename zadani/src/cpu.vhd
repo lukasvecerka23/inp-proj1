@@ -136,44 +136,36 @@ begin
 		end if;
 	end process;
 
-	-- MX1
-	MX1: process (CLK, RESET, MX1_sel)
-	begin
-		if RESET = '1' then
-			MX1_output <= (others => '0');
-		elsif (CLK'event) and (CLK='1') then
-			case MX1_sel is
-				when '0' =>
-					MX1_output <= PC_addr;
-				when '1' =>
-					MX1_output <= PTR_addr;
-				when others =>
-					MX1_output <= (others => '0');
-			end case;
-		end if;
-	end process;
-	DATA_ADDR <= MX1_output;
+-- MX1
+if RESET = '1' then
+	MX1_output <= (others => '0');
+endif;
+case MX1_sel is
+	when '0' =>
+		MX1_output <= PC_addr;
+	when '1' =>
+		MX1_output <= PTR_addr;
+	when others =>
+		MX1_output <= (others => '0');
+end case;
+DATA_ADDR <= MX1_output;
 
 	-- MX2
-	MX2: process(CLK, RESET, MX2_sel)
-	begin
-		if RESET = '1' then
-			MX2_output <= (others => '0');
-		elsif (CLK'event) and (CLK='1') then
-			case MX2_sel is
-				when "00" =>
-					MX2_output <= IN_DATA;
-				when "01" =>
-					MX2_output <= DATA_RDATA + '1';
-				when "10" =>
-					MX2_output <= DATA_RDATA - '1';
-				when others =>
-					MX2_output <= (others => '0'); 
-			end case;
-		end if;
-	end process;
-	OUT_DATA <= DATA_RDATA;
-	DATA_WDATA <= MX2_OUTPUT;
+if RESET = '1' then
+	MX2_outpu <= (others=>'0');
+endif;
+case MX2_sel is
+		when "00" =>
+			MX2_output <= IN_DATA;
+		when "01" =>
+			MX2_output <= DATA_RDATA + '1';
+		when "10" =>
+			MX2_output <= DATA_RDATA - '1';
+		when others =>
+			MX2_output <= (others => '0'); 
+end case;
+OUT_DATA <= DATA_RDATA;
+DATA_WDATA <= MX2_OUTPUT;
 	
 
 
