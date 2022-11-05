@@ -201,7 +201,7 @@ begin
 		end if;
     end process;
 
-	next_state_logic: process(curr_state)
+	next_state_logic: process(curr_state, instruction)
 	begin
 		PC_inc <= '0';
 		PC_dec <= '0';
