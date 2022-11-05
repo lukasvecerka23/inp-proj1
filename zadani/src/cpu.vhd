@@ -329,18 +329,18 @@ begin
 				PC_inc <= '1';
 				DATA_EN <= '1';
 				MX1_sel <= '1';
-				next_state <= S_WHILE_1;
+				next_state <= S_WHILE_START_1;
 			
 			when S_WHILE_START_1 =>
 				if DATA_RDATA = x"00" then
 					PAR_inc <= '1';
-					next_state <= S_WHILE_2;
+					next_state <= S_WHILE_START_2;
 				end if;
 
 			when S_WHILE_START_2 =>
 				if (PAR_count /= x"00") then
 					DATA_EN <= '1';
-					next_state <= S_WHILE_3;
+					next_state <= S_WHILE_START_3;
 				else
 					next_state <= S_FETCH;
 				end if ;
@@ -352,7 +352,7 @@ begin
 					PAR_dec <= '1';
 				end if;
 				PC_inc <= '1';
-				next_state <= S_WHILE_2;
+				next_state <= S_WHILE_START_2;
 
 			when S_WHILE_END =>
 				DATA_EN <= '1';
