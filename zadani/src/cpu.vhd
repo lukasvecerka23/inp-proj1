@@ -348,7 +348,7 @@ begin
 			when S_WHILE_START_3 =>
 				if DATA_RDATA = X"5B" then
 					PAR_inc <= '1';
-				elsif DATA_RDATA = X"5D"
+				elsif DATA_RDATA = X"5D" then
 					PAR_dec <= '1';
 				end if;
 				PC_inc <= '1';
