@@ -311,7 +311,7 @@ begin
 
 			when S_READ1 =>
 				IN_REQ <= '1';
-				next_state <= S_READ1;
+				next_state <= S_READ2;
 
 			when S_READ2 =>
 				if IN_VLD = '0' then
