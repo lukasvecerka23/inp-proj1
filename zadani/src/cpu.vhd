@@ -209,10 +209,12 @@ begin
 						PC_inc <= '1';
 				end case;
 			when S_PTR_INC =>
+				MX1_sel <= '1';
 				PTR_inc <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
 			when S_PTR_DEC =>
+				MX1_sel <= '1';
 				PTR_dec <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
