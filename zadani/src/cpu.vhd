@@ -136,12 +136,9 @@ begin
 		end if;
 	end process;
 
--- MX1
-mx1: process(MX1_sel)
-begin
-	if RESET = '1' then
-		MX1_output <= (others => '0');
-	else
+	-- MX1
+	mx1: process(MX1_sel)
+	begin
 		case MX1_sel is
 			when '0' =>
 				MX1_output <= PC_addr;
@@ -150,17 +147,12 @@ begin
 			when others =>
 				MX1_output <= (others => '0');
 		end case;
-	end if;
-end process;
-DATA_ADDR <= MX1_output;
+	end process;
+	DATA_ADDR <= MX1_output;
 
 	-- MX2
-
-mx2: process (MX2_sel)
-begin
-	if RESET = '1' then
-		MX2_output <= (others=>'0');
-	else
+	mx2: process (MX2_sel)
+	begin
 		case MX2_sel is
 				when "00" =>
 					MX2_output <= IN_DATA;
@@ -171,10 +163,9 @@ begin
 				when others =>
 					MX2_output <= (others => '0'); 
 		end case;
-	end if;
-end process;
-OUT_DATA <= DATA_RDATA;
-DATA_WDATA <= MX2_OUTPUT;
+	end process;
+	OUT_DATA <= DATA_RDATA;
+	DATA_WDATA <= MX2_OUTPUT;
 	
 
 
