@@ -137,7 +137,7 @@ begin
 	end process;
 
 	-- MX1
-	mx1: process(MX1_sel)
+	mx1: process(MX1_sel, PC_addr, PTR_addr)
 	begin
 		case MX1_sel is
 			when '0' =>
@@ -151,7 +151,7 @@ begin
 	DATA_ADDR <= MX1_output;
 
 	-- MX2
-	mx2: process (MX2_sel)
+	mx2: process (MX2_sel, IN_DATA, DATA_RDATA)
 	begin
 		case MX2_sel is
 				when "00" =>
@@ -256,17 +256,15 @@ begin
 				next_state <= S_FETCH;
 			-- Value increment
 			when S_VAL_INC =>
-				MX1_sel <= '1';
 				DATA_EN <= '1';
+				MX1_sel <= '1';
 				next_state <= S_VAL_INC2;
 
 			when S_VAL_INC2 =>
-				MX2_sel <= "01";
-				MX1_sel <= '1';
-				next_state <= S_VAL_INC3;
-			when S_VAL_INC3 =>
 				DATA_EN <= '1';
 				DATA_RDWR <= '1';
+				MX2_sel <= "01";
+				MX1_sel <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
 			-- Value decrement
