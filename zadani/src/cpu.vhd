@@ -295,7 +295,7 @@ begin
 
 			when S_WRITE2 =>
 				if (OUT_BUSY = '1') then
-					next_state <= S_WRITE1;
+					next_state <= S_DECODE;
 				else
 					OUT_WE <= '1';
 					PC_inc <= '1';
