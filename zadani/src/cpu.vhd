@@ -337,6 +337,7 @@ begin
 				if DATA_RDATA = x"00" then
 					PAR_inc <= '1';
 					next_state <= S_WHILE_START_2;
+				next_stat <= S_FETCH;
 				end if;
 
 			when S_WHILE_START_2 =>
