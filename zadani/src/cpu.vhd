@@ -81,7 +81,7 @@ architecture behavioral of cpu is
 		S_READ,
 		S_NULL
 	);
-	signal instruction : instruction_type;
+	
 
 	-- Instrukce
 	type instruction_type is (
@@ -95,8 +95,10 @@ architecture behavioral of cpu is
 		i_while_end,
 		i_do_while_start,
 		i_do_while_end,
-		i_null
+		i_null,
+		i_undefined
 	);
+	signal instruction : instruction_type;
 
 	signal curr_state : FSM := S_START;
 	signal next_state : FSM;
@@ -183,6 +185,7 @@ begin
 			when x"2E" => instruction <= i_write;
 			when x"2C" => instruction <= i_read;
 			when x"00" => instruction <= i_null;
+			when others => instruction <= i_undefined;
 		end case;
 	end process;
 
