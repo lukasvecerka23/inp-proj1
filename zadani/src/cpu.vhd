@@ -297,15 +297,17 @@ begin
 			when S_WRITE2 =>
 				MX1_sel <= '1';
 				--if (OUT_BUSY = '0') then
-					PC_inc <= '1';
+					
 				--end if;
 				next_state <= S_WRITE3;
 
 			when S_WRITE3 =>
+				DATA_EN <= '1'
 				if (OUT_BUSY = '1') then
 					next_state <= S_WRITE2;
 				else
 					OUT_WE <= '1';
+					PC_inc <= '1';
 					next_state <= S_FETCH;
 				end if;
 
