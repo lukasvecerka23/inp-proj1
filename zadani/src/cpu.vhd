@@ -229,7 +229,9 @@ begin
 					when i_val_inc =>
 						MX1_sel <= '1';
 						next_state <= S_VAL_INC;
-					when i_val_dec => next_state <= S_VAL_DEC;
+					when i_val_dec =>
+						MX1_sel <= '1';
+						next_state <= S_VAL_DEC;
 					when i_while_start => next_state <= S_WHILE_START;
 					when i_while_end => next_state <= S_WHILE_END;
 					when i_do_while_start => next_state <= S_DO_WHILE_START;
