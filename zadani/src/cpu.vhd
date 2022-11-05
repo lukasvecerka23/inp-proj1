@@ -254,7 +254,7 @@ begin
 					when i_while_start => next_state <= S_WHILE_START;
 					when i_while_end => next_state <= S_WHILE_END;
 					when i_do_while_start => next_state <= S_DO_WHILE_START;
-					when i_do_while_end => next_state <= S_DO_WHILE_END;
+					when i_do_while_end => next_state <= S_WHILE_END;
 					when i_write => next_state <= S_WRITE1;
 					when i_read => next_state <= S_READ1;
 					when i_null => next_state <= S_NULL;
@@ -396,6 +396,7 @@ begin
 					PC_dec <= '1';
 				end if;
 				next_state <= S_WHILE_END_3;
+			
  
 			when others =>
 				next_state <= S_FETCH;
