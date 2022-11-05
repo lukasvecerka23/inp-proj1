@@ -295,14 +295,14 @@ begin
 			--	next_state <= S_WRITE2;
 
 			when S_WRITE2 =>
-				MX1_sel <= '1';
+				DATA_EN <= '1';
 				--if (OUT_BUSY = '0') then
 					
 				--end if;
 				next_state <= S_WRITE3;
 
 			when S_WRITE3 =>
-				DATA_EN <= '1';
+				-- DATA_EN <= '1';
 				if (OUT_BUSY = '1') then
 					next_state <= S_WRITE2;
 				else
