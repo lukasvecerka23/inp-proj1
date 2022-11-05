@@ -295,8 +295,8 @@ begin
 				DATA_EN <= '1';
 				next_state <= S_WRITE2;
 
-			when S_WRITE2
-				MX_sel <= '1';
+			when S_WRITE2 =>
+				MX1_sel <= '1';
 				next_state <= S_WRITE3
 
 			when S_WRITE3 =>
