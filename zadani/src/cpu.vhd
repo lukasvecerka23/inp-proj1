@@ -289,13 +289,13 @@ begin
 				next_state <= S_FETCH;
 
 			when S_WRITE1 =>
-				DATA_EN <= '1';
 				MX1_sel <= '1';
 				next_state <= S_WRITE2;
 
 			when S_WRITE2 =>
+				DATA_EN <= '1';
 				if (OUT_BUSY = '1') then
-					next_state <= S_DECODE;
+					next_state <= S_WRITE1;
 				else
 					OUT_WE <= '1';
 					PC_inc <= '1';
