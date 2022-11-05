@@ -382,9 +382,9 @@ begin
 				end if;
 			
 			when S_WHILE_END_4 =>
-				if (DATA_RDATA = X"5D") then
+				if (DATA_RDATA = X"5D" or DATA_RDATA = X"29") then
 					PAR_inc <= '1';
-				elsif (DATA_RDATA = X"5B") then
+				elsif (DATA_RDATA = X"5B" or DATA_RDATA = X"28") then
 					PAR_dec <= '1';
 				end if;
 				next_state <= S_WHILE_END_5;
