@@ -244,6 +244,7 @@ begin
 					when i_do_while_start => next_state <= S_DO_WHILE_START;
 					when i_do_while_end => next_state <= S_DO_WHILE_END;
 					when i_write =>
+						DATA_EN <= '1';
 						MX1_sel <= '1';
 						next_state <= S_WRITE1;
 					when i_read => next_state <= S_READ;
@@ -289,7 +290,6 @@ begin
 				next_state <= S_FETCH;
 
 			when S_WRITE1 =>
-				DATA_EN <= '1';
 				MX1_sel <= '1';
 				next_state <= S_WRITE2;
 
