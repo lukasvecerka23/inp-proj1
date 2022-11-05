@@ -310,9 +310,15 @@ begin
 					next_state <= S_FETCH;
 				end if;
 
-			when S_READ =>
+			when S_READ1 =>
 				IN_REQ <= '1';
+				next_state <= S_READ1;
+
+			when S_READ2 =>
 				if IN_VLD = '0' then
+					next_state <= S_READ1;
+				else
+					PC_inc <= '1';
 					next_state <= S_FETCH;
 				end if;
 
