@@ -97,6 +97,7 @@ architecture behavioral of cpu is
 		S_DO_WHILE_END,
 		S_WRITE1,
 		S_WRITE2,
+		S_WRITE3,
 		S_READ,
 		S_NULL,
 		S_UNDEFINED
@@ -292,13 +293,15 @@ begin
 
 			when S_WRITE1 =>
 				DATA_EN <= '1';
-				MX1_sel <= '1';
 				next_state <= S_WRITE2;
 
-			when S_WRITE2 =>
+			when S_WRITE2
+				MX_sel <= '1';
+				next_state <= S_WRITE3
+
+			when S_WRITE3 =>
 				DATA_EN <= '1';
 				if (OUT_BUSY = '1') then
-					MX1_sel <= '1';
 					next_state <= S_WRITE2;
 				else
 					OUT_WE <= '1';
