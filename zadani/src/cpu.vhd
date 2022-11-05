@@ -79,7 +79,8 @@ architecture behavioral of cpu is
 		S_DO_WHILE_END,
 		S_WRITE,
 		S_READ,
-		S_NULL
+		S_NULL,
+		S_UNDEFINED
 	);
 
 	signal curr_state : FSM := S_START;
@@ -179,14 +180,14 @@ begin
 
 		case curr_state is
 			when S_START =>
-				DATA_EN <= '1';
 				next_state <= S_FETCH;
 			when S_FETCH =>
+				DATA_EN <= '1';
 				next_state <= S_DECODE;
 			when S_DECODE =>
 				case DATA_RDATA is
 					when x"3E" => next_state <= S_PTR_INC;
-					when x"3C" =>next_state <= S_PTR_DEC;
+					when x"3C" => next_state <= S_PTR_DEC;
 					when x"2B" =>
 						MX1_sel <= '1';
 						next_state <= S_VAL_INC;
@@ -198,9 +199,7 @@ begin
 					when x"2E" => next_state <= S_WRITE;
 					when x"2C" => next_state <= S_READ;
 					when x"00" => next_state <= S_NULL;
-					when others =>
-						next_state <= S_FETCH;
-						PC_inc <= '1';
+					when others => next_state <= S_UNDEFINED;
 				end case;
 			when S_PTR_INC =>
 				PTR_inc <= '1';
