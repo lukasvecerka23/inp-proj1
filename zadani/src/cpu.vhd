@@ -243,11 +243,13 @@ begin
 				end case;
 			-- Pointer increment
 			when S_PTR_INC =>
+				DATA_EN <= '1';
 				PTR_inc <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
 			-- Pointer decrement
 			when S_PTR_DEC =>
+				DATA_EN <= '1';
 				PTR_dec <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
