@@ -219,10 +219,10 @@ begin
 				PC_inc <= '1';
 				next_state <= S_FETCH;
 			when S_VAL_INC =>
-				DATA_EN <= '1';
 				MX1_sel <= '1';
 				next_state <= S_VAL_INC2;
 			when S_VAL_INC2 =>
+				DATA_EN <= '1';
 				MX2_sel <= "01";
 				MX1_sel <= '1';
 				next_state <= S_VAL_INC3;
