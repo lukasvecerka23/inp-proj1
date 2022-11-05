@@ -65,6 +65,7 @@ architecture behavioral of cpu is
 	signal MX2_sel : std_logic_vector(1 downto 0);
 	signal MX2_output : std_logic_vector(7 downto 0):=(others=>'0');
 
+	-- Definice instrukci
 	type instruction_type is(
 		i_ptr_inc,
 		i_ptr_dec,
@@ -146,7 +147,7 @@ begin
 		end if;
 	end process;
 
-	-- Citca poctu zavorek
+	-- Citac poctu zavorek
 	PAR_cnt: process (CLK, RESET, PAR_inc, PAR_dec)
 	begin
 		if RESET = '1' then
@@ -160,7 +161,7 @@ begin
 		end if;
 	end process;
 
-	-- MX1
+	-- MX1 - multiplexor pro vyber mezi adresou programu a adresou dat
 	mx1: process(MX1_sel, PC_addr, PTR_addr)
 	begin
 		case MX1_sel is
@@ -174,7 +175,7 @@ begin
 	end process;
 	DATA_ADDR <= MX1_output;
 
-	-- MX2
+	-- MX2 - multiplexor pro urceni hodnoty zapisovane do pameti
 	mx2: process (MX2_sel, IN_DATA, DATA_RDATA)
 	begin
 		case MX2_sel is
@@ -260,17 +261,17 @@ begin
 					when i_null => next_state <= S_NULL;
 					when others => next_state <= S_UNDEFINED;
 				end case;
-			-- Pointer increment
+			-- I_PTR_INC - Inkrementace ukazatele
 			when S_PTR_INC =>
 				PTR_inc <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
-			-- Pointer decrement
+			-- I_PTR_DEC - Dekrementace ukazatele
 			when S_PTR_DEC =>
 				PTR_dec <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
-			-- Value increment
+			-- I_VAL_INC - Inkrementace hodnoty v pameti
 			when S_VAL_INC =>
 				DATA_EN <= '1';
 				MX1_sel <= '1';
@@ -284,7 +285,7 @@ begin
 				PC_inc <= '1';
 				next_state <= S_FETCH;
 
-			-- Value decrement
+			-- I_VAL_DEC - Dekrementace hodnoty v pameti
 			when S_VAL_DEC =>
 				DATA_EN <= '1';
 				MX1_sel <= '1';
@@ -296,7 +297,7 @@ begin
 				MX1_sel <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
-
+			-- I_WRITE - vlozeni hodnoty z pameti na vystup
 			when S_WRITE1 =>
 				DATA_EN <= '1';
 				MX1_sel <= '1';
@@ -310,7 +311,7 @@ begin
 					PC_inc <= '1';
 					next_state <= S_FETCH;
 				end if;
-
+			-- I_READ - precteni hodnoty ze vstupu a ulozeni na aktualni adresu v pameti
 			when S_READ1 =>
 				IN_REQ <= '1';
 				next_state <= S_READ2;
@@ -327,7 +328,7 @@ begin
 					next_state <= S_FETCH;
 				end if;
 
-			-- I_WHILE_START ... [
+			-- I_WHILE_START - zacatek while cyklu
 			when S_WHILE_START =>
 				PC_inc <= '1';
 				DATA_EN <= '1';
@@ -359,7 +360,7 @@ begin
 				PC_inc <= '1';
 				next_state <= S_WHILE_START_2;
 			
-			-- I_WHILE_END ... ] or I_DO_WHILE_END ...)
+			-- I_WHILE_END - konec while cyklu a do-while cyklu
 			when S_WHILE_END =>
 				DATA_EN <= '1';
 				MX1_sel <= '1';
@@ -384,10 +385,10 @@ begin
 				end if;
 			
 			when S_WHILE_END_4 =>
-				-- Check between ] and )
+				-- Kontrola jestli se jedna o ] nebo )
 				if (DATA_RDATA = X"5D" or DATA_RDATA = X"29") then
 					PAR_inc <= '1';
-				-- Check between [ and (
+				-- Kontrola jestli se jedna o [ nebo (
 				elsif (DATA_RDATA = X"5B" or DATA_RDATA = X"28") then
 					PAR_dec <= '1';
 				end if;
