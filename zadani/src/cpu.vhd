@@ -189,6 +189,7 @@ begin
 					when x"3C" =>
 						next_state <= S_PTR_DEC;
 					when x"2B" =>
+						MX1_sel <= '1';
 						next_state <= S_VAL_INC;
 					when x"2D" =>
 						next_state <= S_VAL_DEC;
@@ -207,7 +208,7 @@ begin
 					when x"00" =>
 						next_state <= S_NULL;
 					when others =>
-						next_state <= S_DECODE;
+						next_state <= S_FETCH;
 						PC_inc <= '1';
 				end case;
 			when S_PTR_INC =>
@@ -221,10 +222,9 @@ begin
 
 			
 			when S_VAL_INC =>
-				MX1_sel <= '1';
+				DATA_EN <= '1';
 				next_state <= S_VAL_INC2;
 			when S_VAL_INC2 =>
-				DATA_EN <= '1';
 				MX2_sel <= "01";
 				MX1_sel <= '1';
 				next_state <= S_VAL_INC3;
