@@ -148,8 +148,8 @@ begin
 					MX2_output <= (others => '0'); 
 			end case;
 		end if;
-		DATA_WDATA <= MX2_OUTPUT;
 	end process;
+	DATA_WDATA <= MX2_OUTPUT;
 
 	--FSM
 	state: process (CLK, RESET, EN)
@@ -218,12 +218,15 @@ begin
 				PTR_dec <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
+
+			
 			when S_VAL_INC =>
+				DATA_RDWRD <= '0';
+				DATA_EN <= '1';
 				MX1_sel <= '1';
-				MX2_sel <= "01";
 				next_state <= S_VAL_INC2;
 			when S_VAL_INC2 =>
-				DATA_EN <= '1';
+				MX2_sel <= "01";
 				MX1_sel <= '1';
 				next_state <= S_VAL_INC3;
 			when S_VAL_INC3 =>
