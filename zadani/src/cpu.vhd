@@ -48,7 +48,7 @@ architecture behavioral of cpu is
   	signal PC_dec : std_logic;
 
   	-- Pointer do pameti dat
-  	signal PTR_addr : std_logic_vector(12 downto 0) := "1000000000000";
+  	signal PTR_addr : std_logic_vector(12 downto 0) := (12 => '1', others => '0');
   	signal PTR_inc : std_logic;
 	signal PTR_dec : std_logic;
 
@@ -103,7 +103,7 @@ begin
 	PTR_cnt: process (CLK, RESET, PTR_inc, PTR_dec)
 	begin
 		if RESET = '1' then
-			PTR_addr <= (others => '0');
+			PTR_addr <= (12 => '1', others => '0');
 		elsif (CLK'event) and (CLK='1') then
 			if (PTR_inc = '1') then
 				PTR_addr <= PTR_addr + '1';
