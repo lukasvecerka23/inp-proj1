@@ -154,7 +154,7 @@ begin
 		elsif (CLK'event) and (CLK = '1') then
 			if (PAR_inc = '1') then
 				PAR_count <= PAR_count + '1';
-			elsif (PAR_dec = '0') then
+			elsif (PAR_dec = '1') then
 				PAR_count <= PAR_count - '1';
 			end if;
 		end if;
