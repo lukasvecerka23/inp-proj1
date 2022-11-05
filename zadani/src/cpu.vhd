@@ -95,7 +95,7 @@ architecture behavioral of cpu is
 		i_while_end,
 		i_do_while_start,
 		i_do_while_end,
-		i_null,
+		i_null
 	);
 
 	signal curr_state : FSM := S_START;
