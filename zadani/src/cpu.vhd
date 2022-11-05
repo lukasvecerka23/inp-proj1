@@ -226,6 +226,8 @@ begin
 
 	next_state_logic: process(curr_state, instruction)
 	begin
+		PTR_inc <= '0';
+		PTR_dec <= '0';
 		PC_inc <= '0';
 		PC_dec <= '0';
 		PTR_inc <= '0';
