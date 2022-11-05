@@ -296,11 +296,11 @@ begin
 				next_state <= S_WRITE2;
 
 			when S_WRITE2 =>
-				DATA_EN <= '1';
 				MX1_sel <= '1';
 				next_state <= S_WRITE3;
 
 			when S_WRITE3 =>
+				DATA_EN <= '1';
 				if (OUT_BUSY = '1') then
 					next_state <= S_WRITE2;
 				else
