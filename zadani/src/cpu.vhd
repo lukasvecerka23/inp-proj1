@@ -220,10 +220,10 @@ begin
 				next_state <= S_FETCH;
 			when S_VAL_INC =>
 				MX1_sel <= '1';
+				MX2_sel <= "01";
 				next_state <= S_VAL_INC2;
 			when S_VAL_INC2 =>
 				DATA_EN <= '1';
-				MX2_sel <= "01";
 				MX1_sel <= '1';
 				next_state <= S_VAL_INC3;
 			when S_VAL_INC3 =>
