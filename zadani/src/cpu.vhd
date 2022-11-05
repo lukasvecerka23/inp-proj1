@@ -147,15 +147,15 @@ begin
 	end process;
 
 	-- Citca poctu zavorek
-	PAR_cnt: process (CLK, RESET, PTR_inc, PTR, dec)
+	PAR_cnt: process (CLK, RESET, PAR_inc, PAR_dec)
 	begin
 		if RESET = '1' then
 			PAR_count <= (others=>'0');
-		elsif (CLK'event) and (CLK = 1) then
+		elsif (CLK'event) and (CLK = '1') then
 			if (PAR_inc = '1') then
-				PAR_cnt <= PAR_cnt + '1';
+				PAR_count <= PAR_count + '1';
 			elsif (PAR_dec = '0') then
-				PAR_cnt <= PAR_cnt - '1';
+				PAR_count <= PAR_count - '1';
 			end if;
 		end if;
 	end process;
@@ -338,7 +338,7 @@ begin
 				end if;
 
 			when S_WHILE_START_2 =>
-				if (PAR_cnt /= x"00") then
+				if (PAR_count /= x"00") then
 					DATA_EN <= '1';
 					next_state <= S_WHILE_3;
 				else
@@ -370,7 +370,7 @@ begin
 				end if;
 
 			when S_WHILE_END_3 =>
-				if (PAR_cnt /= x"00") then
+				if (PAR_count /= x"00") then
 					DATA_EN <= '1';
 					next_state <= S_WHILE_END_4;
 				else
@@ -386,7 +386,7 @@ begin
 				next_state <= S_WHILE_END_5;
 			
 			when S_WHILE_END_5 =>
-				if (PAR_cout = x"00") then
+				if (PAR_count = x"00") then
 					PC_inc <= '1';
 				else
 					PC_dec <= '1';
