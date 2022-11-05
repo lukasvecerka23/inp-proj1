@@ -81,6 +81,23 @@ architecture behavioral of cpu is
 		S_READ,
 		S_NULL
 	);
+	signal instruction : instruction_type;
+
+	-- Instrukce
+	type instruction_type is (
+		i_ptr_inc,
+		i_ptr_dec,
+		i_val_inc,
+		i_val_dec,
+		i_read,
+		i_write,
+		i_while_start,
+		i_while_end,
+		i_do_while_start,
+		i_do_while_end,
+		i_null,
+	);
+
 	signal curr_state : FSM := S_START;
 	signal next_state : FSM;
 begin
@@ -151,6 +168,24 @@ begin
 	end process;
 	DATA_WDATA <= MX2_OUTPUT;
 
+	-- Instrukcni dekoder
+	instruction_dec: process(DATA_RDATA)
+	begin
+		case DATA_RDATA is
+			when x"3E" => instruction <= i_ptr_inc;
+			when x"3C" => instruction <= i_ptr_dec;
+			when x"2B" => instruction <= i_val_inc;
+			when x"2D" => instruction <= i_val_dec;
+			when x"5B" => instruction <= i_while_start;
+			when x"5D" => instruction <= i_while_end;
+			when x"28" => instruction <= i_do_while_start;
+			when x"29" => instruction <= i_do_while_end;
+			when x"2E" => instruction <= i_write;
+			when x"2C" => instruction <= i_read;
+			when x"00" => instruction <= i_null;
+		end case;
+	end process;
+
 	--FSM
 	state: process (CLK, RESET, EN)
 	begin
@@ -183,30 +218,20 @@ begin
 				DATA_EN <= '1';
 				next_state <= S_DECODE;
 			when S_DECODE =>
-				case DATA_RDATA is
-					when x"3E" =>
-						next_state <= S_PTR_INC;
-					when x"3C" =>
-						next_state <= S_PTR_DEC;
-					when x"2B" =>
+				case instruction is
+					when i_ptr_inc => next_state <= S_PTR_INC;
+					when i_ptr_dec =>next_state <= S_PTR_DEC;
+					when i_val_inc =>
 						MX1_sel <= '1';
 						next_state <= S_VAL_INC;
-					when x"2D" =>
-						next_state <= S_VAL_DEC;
-					when x"5B" =>
-						next_state <= S_WHILE_START;
-					when x"5D" =>
-						next_state <= S_WHILE_END;
-					when x"28" =>
-						next_state <= S_DO_WHILE_START;
-					when x"29" =>
-						next_state <= S_DO_WHILE_END;
-					when x"2E" =>
-						next_state <= S_WRITE;
-					when x"2C" =>
-						next_state <= S_READ;
-					when x"00" =>
-						next_state <= S_NULL;
+					when i_val_dec => next_state <= S_VAL_DEC;
+					when i_while_start => next_state <= S_WHILE_START;
+					when i_while_end => next_state <= S_WHILE_END;
+					when i_do_while_start => next_state <= S_DO_WHILE_START;
+					when i_do_while_end => next_state <= S_DO_WHILE_END;
+					when i_write => next_state <= S_WRITE;
+					when i_read => next_state <= S_READ;
+					when i_null => next_state <= S_NULL;
 					when others =>
 						next_state <= S_FETCH;
 						PC_inc <= '1';
