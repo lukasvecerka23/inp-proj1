@@ -75,7 +75,7 @@ architecture behavioral of cpu is
 		i_do_while_end,
 		i_null,
 		i_undefined
-	)
+	);
 	signal instruction : instruction_type;
 
 	-- FSM
