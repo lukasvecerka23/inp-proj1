@@ -207,7 +207,7 @@ begin
 					when x"00" =>
 						next_state <= S_NULL;
 					when others =>
-						next_state <= S_FETCH;
+						next_state <= S_DECODE;
 						PC_inc <= '1';
 				end case;
 			when S_PTR_INC =>
