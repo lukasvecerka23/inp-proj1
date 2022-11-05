@@ -405,10 +405,10 @@ begin
 			when S_DO_WHILE_START =>
 				PC_inc <= '1';
 				next_state <= S_FETCH;
-
+			-- I_NULL - konec programu
 			when S_NULL =>
 				next_state <= S_NULL;
- 
+			-- Nedefinovane stavy - komentare apod.
 			when others =>
 				next_state <= S_FETCH;
 				PC_inc <= '1';
