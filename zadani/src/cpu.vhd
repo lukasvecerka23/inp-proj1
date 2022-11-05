@@ -311,13 +311,13 @@ begin
 
 			when S_READ1 =>
 				IN_REQ <= '1';
-				MX1_sel <= '1';
 				next_state <= S_READ2;
 
 			when S_READ2 =>
 				if IN_VLD /= '1' then
 					next_state <= S_READ1;
 				else
+					MX1_sel <= '1';
 					DATA_EN <= '1';
 					DATA_RDWR <= '1';
 					PC_inc <= '1';
