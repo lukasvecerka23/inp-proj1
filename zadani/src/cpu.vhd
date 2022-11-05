@@ -137,7 +137,7 @@ begin
 	end process;
 
 -- MX1
-mx2: process(MX1_sel)
+mx1: process(MX1_sel)
 begin
 	if RESET = '1' then
 		MX1_output <= (others => '0');
