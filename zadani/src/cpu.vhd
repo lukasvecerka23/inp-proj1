@@ -250,11 +250,11 @@ begin
 				DATA_EN <= '1';
 				next_state <= S_VAL_INC2;
 			when S_VAL_INC2 =>
-				DATA_EN <= '1';
 				MX2_sel <= "01";
 				MX1_sel <= '1';
 				next_state <= S_VAL_INC3;
 			when S_VAL_INC3 =>
+				DATA_EN <= '1';
 				DATA_RDWR <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
