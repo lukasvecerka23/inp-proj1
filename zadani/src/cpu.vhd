@@ -225,7 +225,7 @@ begin
 					when i_ptr_inc => next_state <= S_PTR_INC;
 					when i_ptr_dec => next_state <= S_PTR_DEC;
 					when i_val_inc =>
-						
+						MX1_sel <= '1';
 						next_state <= S_VAL_INC;
 					when i_val_dec => next_state <= S_VAL_DEC;
 					when i_while_start => next_state <= S_WHILE_START;
@@ -245,18 +245,16 @@ begin
 				PTR_dec <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
-
 			
 			when S_VAL_INC =>
-				MX1_sel <= '1';
 				DATA_EN <= '1';
 				next_state <= S_VAL_INC2;
 			when S_VAL_INC2 =>
+				DATA_EN <= '1';
 				MX2_sel <= "01";
 				MX1_sel <= '1';
 				next_state <= S_VAL_INC3;
 			when S_VAL_INC3 =>
-				DATA_EN <= '1';
 				DATA_RDWR <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
