@@ -56,11 +56,11 @@ architecture behavioral of cpu is
 
 	-- MX1 - vybrani zda se jedno o adresu programu nebo dat
 	signal MX1_sel : std_logic;
-	signal MX1_output : std_logic_vector(12 downto 0);
+	signal MX1_output : std_logic_vector(12 downto 0) := (others=>'0');
 
 	-- MX2 - hodnota zapisovana do pameti
 	signal MX2_sel : std_logic_vector(1 downto 0);
-	signal MX2_output : std_logic_vector(7 downto 0);
+	signal MX2_output : std_logic_vector(7 downto 0):=(others=>'0');
 
 	type instruction_type is(
 		i_ptr_inc,
