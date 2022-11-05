@@ -89,6 +89,8 @@ architecture behavioral of cpu is
 		S_VAL_INC2,
 		S_VAL_INC3,
 		S_VAL_DEC,
+		S_VAL_DEC2,
+		S_VAL_DEC3,
 		S_WHILE_START,
 		S_WHILE_END,
 		S_DO_WHILE_START,
@@ -255,6 +257,19 @@ begin
 				PC_inc <= '1';
 				next_state <= S_VAL_INC3;
 			when S_VAL_INC3 =>
+				DATA_EN <= '1';
+				DATA_RDWR <= '1';
+				next_state <= S_FETCH;
+
+			when S_VAL_DEC =>
+				DATA_EN <= '1';
+				next_state <= S_VAL_DEC2;
+			when S_VAL_DEC2 =>
+				MX2_sel <= "10";
+				MX1_sel <= '1';
+				PC_inc <= '1';
+				next_state <= S_VAL_DEC3;
+			when S_VAL_DEC3 =>
 				DATA_EN <= '1';
 				DATA_RDWR <= '1';
 				next_state <= S_FETCH;
