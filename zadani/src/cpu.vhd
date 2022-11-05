@@ -53,6 +53,9 @@ architecture behavioral of cpu is
 	signal PTR_dec : std_logic;
 
   	-- Citac pro zacatek/konec while cyklu
+	signal PAR_count : std_logic_vector(12 downto 0) := (others => '0');
+	signal PAR_inc: std_logic;
+	signal PAR_dec: std_logic;
 
 	-- MX1 - vybrani zda se jedno o adresu programu nebo dat
 	signal MX1_sel : std_logic;
@@ -92,7 +95,14 @@ architecture behavioral of cpu is
 		S_VAL_DEC2,
 		S_VAL_DEC3,
 		S_WHILE_START,
+		S_WHILE_START_1,
+		S_WHILE_START_2,
+		S_WHILE_START_3,
 		S_WHILE_END,
+		S_WHILE_END_2,
+		S_WHILE_END_3,
+		S_WHILE_END_4,
+		S_WHILE_END_5,
 		S_DO_WHILE_START,
 		S_DO_WHILE_END,
 		S_WRITE1,
@@ -132,6 +142,20 @@ begin
 				PTR_addr <= PTR_addr + '1';
 			elsif (PTR_dec = '1') then
 				PTR_addr <= PTR_addr - '1';
+			end if;
+		end if;
+	end process;
+
+	-- Citca poctu zavorek
+	PAR_cnt: process (CLK, RESET, PTR_inc, PTR, dec)
+	begin
+		if RESET = '1' then
+			PAR_count <= (others=>'0');
+		elsif (CLK'event) and (CLK = 1) then
+			if (PAR_inc = '1') then
+				PAR_cnt <= PAR_cnt + '1';
+			elsif (PAR_dec = '0') then
+				PAR_cnt <= PAR_cnt - '1';
 			end if;
 		end if;
 	end process;
@@ -301,6 +325,71 @@ begin
 					next_state <= S_FETCH;
 				end if;
 
+			when S_WHILE_START =>
+				PC_inc <= '1';
+				DATA_EN <= '1';
+				MX1_sel <= '1';
+				next_state <= S_WHILE_1;
+			
+			when S_WHILE_START_1 =>
+				if DATA_RDATA = x"00" then
+					PAR_inc <= '1';
+					next_state <= S_WHILE_2;
+				end if;
+
+			when S_WHILE_START_2 =>
+				if (PAR_cnt /= x"00") then
+					DATA_EN <= '1';
+					next_state <= S_WHILE_3;
+				else
+					next_state <= S_FETCH;
+				end if ;
+
+			when S_WHILE_START_3 =>
+				if DATA_RDATA = X"5B" then
+					PAR_inc <= '1';
+				elsif DATA_RDATA = X"5D"
+					PAR_dec <= '1';
+				end if;
+				PC_inc <= '1';
+				next_state <= S_WHILE_2;
+
+			when S_WHILE_END =>
+				DATA_EN <= '1';
+				MX1_sel <= '1';
+				next_state <= S_WHILE_END_2;
+			
+			when S_WHILE_END_2 =>
+				if DATA_RDATA = x"00" then
+					PC_inc <= '1';
+					next_state <= S_FETCH;
+				else
+					PAR_count <= '1';
+					PC_dec <= '1';
+					next_state <= S_WHILE_END_3;
+
+			when S_WHILE_END_3 =>
+				if (PAR_cnt /= x"00") then
+					DATA_EN <= '1';
+					next_state <= S_WHILE_END_4;
+				else
+					next_state <= S_FETCH;
+				end if;
+			
+			when S_WHILE_END_4 =>
+				if (DATA_RDATA = X"5D") then
+					PAR_inc <= '1';
+				elsif (DATA_RDATA = X"5B") then
+					PAR_dec <= '1';
+				next_state <= S_WHILE_END_5;
+			
+			when S_WHILE_END_5 =>
+				if (PAR_cout = x"00") then
+					PC_inc <= '1';
+				else
+					PC_dec <= '1';
+				next_state <= S_WHILE_END_3;
+ 
 			when others =>
 				next_state <= S_FETCH;
 				PC_inc <= '1';
