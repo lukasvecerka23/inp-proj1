@@ -335,7 +335,7 @@ begin
 			
 			when S_WHILE_START_1 =>
 				if DATA_RDATA = x"00" then
-					PAR_inc <= '1';
+					PAR_inc <= "0000000000001";
 					next_state <= S_WHILE_START_2;
 				else
 					next_state <= S_FETCH;
