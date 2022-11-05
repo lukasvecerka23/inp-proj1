@@ -327,6 +327,7 @@ begin
 					next_state <= S_FETCH;
 				end if;
 
+			-- I_WHILE_START ... [
 			when S_WHILE_START =>
 				PC_inc <= '1';
 				DATA_EN <= '1';
@@ -357,7 +358,8 @@ begin
 				end if;
 				PC_inc <= '1';
 				next_state <= S_WHILE_START_2;
-
+			
+			-- I_WHILE_END ... ] or I_DO_WHILE_END ...)
 			when S_WHILE_END =>
 				DATA_EN <= '1';
 				MX1_sel <= '1';
@@ -382,8 +384,10 @@ begin
 				end if;
 			
 			when S_WHILE_END_4 =>
+				-- Check between ] and )
 				if (DATA_RDATA = X"5D" or DATA_RDATA = X"29") then
 					PAR_inc <= '1';
+				-- Check between [ and (
 				elsif (DATA_RDATA = X"5B" or DATA_RDATA = X"28") then
 					PAR_dec <= '1';
 				end if;
@@ -396,7 +400,10 @@ begin
 					PC_dec <= '1';
 				end if;
 				next_state <= S_WHILE_END_3;
-			
+
+			when S_DO_WHILE_START =>
+				PC_inc <= '1';
+				next_state <= S_FETCH;
  
 			when others =>
 				next_state <= S_FETCH;
