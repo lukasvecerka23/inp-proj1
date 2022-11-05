@@ -237,10 +237,10 @@ DATA_WDATA <= MX2_OUTPUT;
 						PC_inc <= '1';
 						next_state <= S_PTR_DEC;
 					when i_val_inc =>
-						MX1_sel <= '1';
+						
 						next_state <= S_VAL_INC;
 					when i_val_dec =>
-						MX1_sel <= '1';
+						
 						next_state <= S_VAL_DEC;
 					when i_while_start => next_state <= S_WHILE_START;
 					when i_while_end => next_state <= S_WHILE_END;
@@ -265,30 +265,33 @@ DATA_WDATA <= MX2_OUTPUT;
 				next_state <= S_FETCH;
 			-- Value increment
 			when S_VAL_INC =>
+				MX1_sel <= '1';
 				DATA_EN <= '1';
 				next_state <= S_VAL_INC2;
 
 			when S_VAL_INC2 =>
 				MX2_sel <= "01";
 				MX1_sel <= '1';
-				PC_inc <= '1';
 				next_state <= S_VAL_INC3;
 			when S_VAL_INC3 =>
 				DATA_EN <= '1';
 				DATA_RDWR <= '1';
+				PC_inc <= '1';
 				next_state <= S_FETCH;
 			-- Value decrement
 			when S_VAL_DEC =>
+				MX1_sel <= '1';
 				DATA_EN <= '1';
 				next_state <= S_VAL_DEC2;
 			when S_VAL_DEC2 =>
 				MX2_sel <= "10";
 				MX1_sel <= '1';
-				PC_inc <= '1';
+				
 				next_state <= S_VAL_DEC3;
 			when S_VAL_DEC3 =>
 				DATA_EN <= '1';
 				DATA_RDWR <= '1';
+				PC_inc <= '1';
 				next_state <= S_FETCH;
 
 			when S_WRITE1 =>
