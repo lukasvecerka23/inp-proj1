@@ -48,7 +48,7 @@ architecture behavioral of cpu is
   	signal PC_dec : std_logic;
 
   	-- Pointer do pameti dat
-  	signal PTR_addr : std_logic_vector(12 downto 0) := x"1000";
+  	signal PTR_addr : std_logic_vector(12 downto 0) := (12 => '1', others => '0');
   	signal PTR_inc : std_logic;
 	signal PTR_dec : std_logic;
 
@@ -90,9 +90,9 @@ begin
 			PC_addr <= (others => '0');
 		elsif (CLK'event) and (CLK = '1') then
 			if (PC_inc = '1') then
-				PC_addr <= PC_addr + 1;
+				PC_addr <= PC_addr + '1';
 			elsif (PC_dec = '1') then
-				PC_addr <= PC_addr - 1;		
+				PC_addr <= PC_addr - '1';		
 			end if;
 		end if;
   	end process;
@@ -104,9 +104,9 @@ begin
 			PTR_addr <= (others => '0');
 		elsif (CLK'event) and (CLK='1') then
 			if (PTR_inc = '1') then
-				PTR_addr <= PTR_addr + 1;
+				PTR_addr <= PTR_addr + '1';
 			elsif (PTR_dec = '1') then
-				PTR_addr <= PTR_addr - 1;
+				PTR_addr <= PTR_addr - '1';
 			end if;
 		end if;
 	end process;
@@ -139,9 +139,9 @@ begin
 				when "00" =>
 					MX2_output <= IN_DATA;
 				when "01" =>
-					MX2_output <= DATA_RDATA + 1;
+					MX2_output <= DATA_RDATA + '1';
 				when "10" =>
-					MX2_output <= DATA_RDATA - 1;
+					MX2_output <= DATA_RDATA - '1';
 				when others =>
 					MX2_output <= (others => '0'); 
 			end case;
