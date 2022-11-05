@@ -291,6 +291,7 @@ begin
 
 			when S_READ2 =>
 				if IN_VLD /= '1' then
+					IN_REQ <= '1';
 					next_state <= S_READ1;
 				else
 					DATA_EN <= '1';
