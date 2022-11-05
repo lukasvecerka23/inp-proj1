@@ -216,9 +216,9 @@ begin
 
 		case curr_state is
 			when S_START =>
+				DATA_EN <= '1';
 				next_state <= S_FETCH;
 			when S_FETCH =>
-				DATA_EN <= '1';
 				next_state <= S_DECODE;
 			when S_DECODE =>
 				case instruction is
