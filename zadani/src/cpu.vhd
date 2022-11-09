@@ -214,6 +214,7 @@ begin
 	end process;
 
 	--FSM
+	-- nastavovani aktualniho stavu
 	state: process (CLK, RESET, EN)
 	begin
 		if RESET = '1' then
@@ -227,6 +228,7 @@ begin
 
 	next_state_logic: process(curr_state, instruction)
 	begin
+		-- inicializace signalu
 		PAR_inc <= '0';
 		PAR_dec <= '0';
 		PC_inc <= '0';
@@ -241,11 +243,14 @@ begin
 		MX2_sel <= "00";
 
 		case curr_state is
+			-- startovni stav
 			when S_START =>
 				next_state <= S_FETCH;
+			-- precteni instrukce
 			when S_FETCH =>
 				DATA_EN <= '1';
 				next_state <= S_DECODE;
+			-- dekodovani instrukce
 			when S_DECODE =>
 				case instruction is
 					when i_ptr_inc => next_state <= S_PTR_INC;
@@ -266,11 +271,13 @@ begin
 				PTR_inc <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
+
 			-- I_PTR_DEC - Dekrementace ukazatele
 			when S_PTR_DEC =>
 				PTR_dec <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
+			
 			-- I_VAL_INC - Inkrementace hodnoty v pameti
 			when S_VAL_INC =>
 				DATA_EN <= '1';
@@ -290,6 +297,7 @@ begin
 				DATA_EN <= '1';
 				MX1_sel <= '1';
 				next_state <= S_VAL_DEC2;
+
 			when S_VAL_DEC2 =>
 				DATA_EN <= '1';
 				DATA_RDWR <= '1';
@@ -297,6 +305,7 @@ begin
 				MX1_sel <= '1';
 				PC_inc <= '1';
 				next_state <= S_FETCH;
+			
 			-- I_WRITE - vlozeni hodnoty z pameti na vystup
 			when S_WRITE1 =>
 				DATA_EN <= '1';
@@ -311,6 +320,7 @@ begin
 					PC_inc <= '1';
 					next_state <= S_FETCH;
 				end if;
+
 			-- I_READ - precteni hodnoty ze vstupu a ulozeni na aktualni adresu v pameti
 			when S_READ1 =>
 				IN_REQ <= '1';
@@ -405,13 +415,16 @@ begin
 			when S_DO_WHILE_START =>
 				PC_inc <= '1';
 				next_state <= S_FETCH;
+
 			-- I_NULL - konec programu
 			when S_NULL =>
 				next_state <= S_NULL;
+
 			-- Nedefinovane stavy - komentare apod.
 			when others =>
 				next_state <= S_FETCH;
 				PC_inc <= '1';
+			
 		end case;
 	end process;
 
