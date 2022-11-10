@@ -127,3 +127,36 @@ if __name__ == "__main__":
     # call the main function
     print("Run this simulation by calling make.")
     exit()
+
+
+@tb_test(skip=False)
+async def test_moje(dut):
+    instcnt, mem, lcd = await run_program(dut, '++++++++(>++++(>++>+++>+++>+<<<<-)>+>+>->>+(<)<-)>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.', timeout_ns=1_000_000)
+    assert lcd == 'Hello World!\n'
+
+
+@tb_test(skip=False)
+async def test_moje_2(dut):
+    instcnt, mem, lcd = await run_program(dut, '+++++[>+++++++++<-]>.', timeout_ns=1_000_000)
+    assert lcd == "-"
+
+
+@tb_test(skip=False)
+async def test_moje_3(dut):
+    instcnt, mem, lcd = await run_program(dut, '++>+++++[<+>-]++++++++[<++++++>-]<.', timeout_ns=1_000_000)
+    assert lcd == "7"
+
+
+@tb_test(skip=False)
+async def test_moje_4(dut):
+    instcnt, mem, lcd = await run_program(dut, '++>>++>>++>>[<++++[>++++++++<-]<-]>>[>++<-]>++++++++[>+++++++++<-]>.+++++++++++++++++++++++++++++.+++++++..+++.-------------------------------------------------------------------------------.+++++++++++++++++++++++++++++++++++++++++++++++++++++++.++++++++++++++++++++++++.+++.------.--------.-------------------------------------------------------------------. ++++[>++++++++<-]>', timeout_ns=1_000_000)
+    assert lcd == 'Hello World!'
+
+
+@tb_test(skip=False)
+async def test_moje_5(dut):
+    instcnt, mem, lcd = await run_program(dut, '++++>++++>++++>++++<<<@[-(-)>]@++++++++++++++++++++++++++++++++++++++++++++++.@[.>]++++++++++++++++++++++++++++++++++++++++++++++.', timeout_ns=1_000_000)
+    assert mem[RAM_OFS] == 0
+    assert mem[RAM_OFS+1] == 0
+    assert mem[RAM_OFS+2] == 0
+    assert lcd == '...'
