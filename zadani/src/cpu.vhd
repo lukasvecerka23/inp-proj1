@@ -134,7 +134,7 @@ begin
   	end process;
 
 	-- Citac pro ukazatel do pameti dat
-	PTR_cnt: process (CLK, RESET, PTR_inc, PTR_dec)
+	PTR_cnt: process (CLK, RESET, PTR_inc, PTR_dec, PTR_addr)
 	begin
 		if RESET = '1' then
 			PTR_addr <= (12 => '1', others => '0');
