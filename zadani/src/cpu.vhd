@@ -1,7 +1,7 @@
 -- cpu.vhd: Simple 8-bit CPU (BrainFuck interpreter)
 -- Copyright (C) 2022 Brno University of Technology,
 --                    Faculty of Information Technology
--- Author(s): jmeno <login AT stud.fit.vutbr.cz>
+-- Author(s): Lukas Vecerka <xvecer30 AT stud.fit.vutbr.cz>
 --
 library ieee;
 use ieee.std_logic_1164.all;
@@ -140,9 +140,17 @@ begin
 			PTR_addr <= (12 => '1', others => '0');
 		elsif (CLK'event) and (CLK='1') then
 			if (PTR_inc = '1') then
-				PTR_addr <= PTR_addr + '1';
+				if (PTR_addr = "1111111111111") then
+					PTR_addr <= (12=>'1', others => '0');
+				else
+					PTR_addr <= PTR_addr + '1';
+				end if;
 			elsif (PTR_dec = '1') then
-				PTR_addr <= PTR_addr - '1';
+				if (PTR_addr = "1000000000000") then
+					PTR_addr <= (others => '1');
+				else
+					PTR_addr <= PTR_addr - '1';
+				end if;
 			end if;
 		end if;
 	end process;
